@@ -2,7 +2,9 @@
 server {
     listen 80;
     server_name localhost:80;
-
+	ssl_protocols TLSv1.2 TLSv1.3;
+  	ssl_certificate /etc/ssl/certs/nginx.crt;
+    ssl_certificate_key /etc/ssl/private/nginx.key;
     root /var/www/html;
 
     location / {

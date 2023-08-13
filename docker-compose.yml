@@ -1,0 +1,8 @@
+version: '3,'
+
+volumes:
+        wordpress:
+                name: wordpress
+                driver: local
+                driver_opts:
+                          driver
