@@ -7,8 +7,8 @@ RUN apt-get -y update && \
 	apt install php-fpm php-mysql -y && \
 	apt install curl -y
 
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
-COPY ./conf /var/www/
+COPY configs/www.conf /etc/php/7.3/fpm/pool.d/
+COPY configs /var/www/
 
 EXPOSE 9000
 
