@@ -1,6 +1,7 @@
 FROM debian:buster
 
-RUN apt-get update && \
+RUN apt-get update -y && \
+    apt install php7.3-fpm php7.3-common php7.3-mysql php7.3-xml php -y && \
     apt-get install -y openssl nginx && \
     rm -rf /var/lib/apt/lists/*
 
@@ -11,10 +12,9 @@ RUN apt-get update && \
 
 COPY default /etc/nginx/sites-available/ 
 
-COPY index.html /var/www/html/
 
 # Expose ports 80 (HTTP) and 443 (HTTPS)
-EXPOSE 80 443
+EXPOSE 443
 
 # Start NGINX in the foreground
 CMD ["nginx", "-g", "daemon off;"]

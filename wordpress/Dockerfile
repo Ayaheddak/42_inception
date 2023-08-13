@@ -1,15 +1,15 @@
 FROM debian:buster
 
-RUN apt-get -y update && \
-    apt-get -y upgrade && \
-	apt update -y && \
+RUN apt update -y && \
 	apt upgrade -y && \
-	apt install php-fpm php-mysql -y && \
+	apt install php7.3-fpm php7.3-common php7.3-mysql php7.3-xml php -y && \
 	apt install curl -y
 
-COPY configs/www.conf /etc/php/7.3/fpm/pool.d/
-COPY configs /var/www/
 
-EXPOSE 9000
+COPY wordpress /wordpress
+COPY script.sh /scripts.sh
+COPY configs/www.conf .
 
-CMD ["bash", "/var/www/setup.sh"]
+RUN chmod +x scripts.sh 
+
+CMD ["sh", "scripts.sh"]

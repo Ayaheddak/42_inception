@@ -1,8 +1,40 @@
-version: '3,'
-
-volumes:
+version: '3'
+services:
+        nginx:
+                build: ./nginx/
+                image: nginx
+                restart: unless-stopped
+                ports:
+                - "443:443"
+                depends_on:
+                - wordpress
+                networks:
+                        - wordpress
+                volumes:
+                        - /Users/luna/data/Wordpress:/var/www/html
         wordpress:
-                name: wordpress
-                driver: local
-                driver_opts:
-                          driver
+                build: ./wordpress/
+                ports:
+                - "9000"
+                networks:
+                        - wordpress
+                depends_on:
+                        - mariadb
+                env_file:
+                        - .env
+                volumes:
+                        - /Users/luna/data/Wordpress:/var/www/html
+        mariadb:
+                build: ./mariadb/
+                ports:
+                        - "3306:3306"
+                networks:
+                        - wordpress
+                volumes:
+                        - /Users/luna/data/Mariadb:/var/lib/mysql
+                env_file:
+                        - .env
+                restart: always
+networks:
+        wordpress:
+                driver: bridge
