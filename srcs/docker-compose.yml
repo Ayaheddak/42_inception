@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+        nginx:
+                container_name: nginx
+                build: ./requirements/nginx
+                image: nginx
+                restart: unless-stopped
+                ports:
+                - "443:443"
+                depends_on:
+                - wordpress
+                networks:
+                        - wordpress
+                volumes:
+                        - Wordpress:/var/www/html
+                
+        wordpress:
+                build: ./requirements/wordpress/
+                ports:
+                        - "9000:9000"
+                container_name: wordpress
+                image: wordpress
+                networks:
+                        - wordpress
+                depends_on:
+                        - mariadb
+                env_file:
+                        - .env
+                volumes:
+                        - Wordpress:/var/www/html
+        mariadb:
+                build: 
+                        context: ./requirements/mariadb/
+                        dockerfile: Dockerfile
+                        args: 
+                                - DB_NAME=${DBNAME}
+                                - DB_USER=${DBUSER}
+                                - DB_PASSWORD=${DBPASS}
+                                - DB_ROOT=${DBROOT}
+                                - DB_ROOT_PASSWORD=${DBPASS}
+                image: mariadb
+                ports:
+                        - "3306:3306"
+                networks:
+                        - wordpress
+                volumes:
+                        - Mariadb:/var/lib/mysql
+                env_file:
+                        - .env
+                restart: always
+                container_name: mariadb
+volumes:
+        Wordpress:
+                driver_opts:
+                        type: none
+                        device: /home/aheddak/data/Wordpress
+                        o: bind
+        Mariadb:
+                driver_opts:
+                        type: none
+                        device: /home/aheddak/data/Mariadb
+                        o: bind
+networks:
+        wordpress:
+                driver: bridge
